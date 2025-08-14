@@ -67,4 +67,4 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 ---
 
 ## 📢 Author
-Created by **[Your Name]** – inspired by DIY electronics and IoT safety devices.
+Created by Garrett Goben – inspired by DIY electronics and IoT safety devices.
