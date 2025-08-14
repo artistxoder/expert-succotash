@@ -17,6 +17,9 @@ DHT dht(DHTPIN, DHTTYPE);
 #define BUZZER_PIN 8       // Buzzer (+) pin connected to Arduino pin 8
 #define LED_PIN 9          // LED (+) pin connected to Arduino pin 9
 
+// --- Mode Button Pin ---
+#define MODE_BUTTON_PIN 2  // New: Mode button connected to digital pin 2
+
 // --- OLED Display Definitions ---
 #define SCREEN_WIDTH 128   // OLED display width, in pixels
 #define SCREEN_HEIGHT 64   // OLED display height, in pixels
@@ -30,6 +33,10 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 // --- System Thresholds and Settings ---
 int gasThreshold = 300;    // Gas threshold value (adjust higher = less sensitive, lower = more sensitive)
 bool useFahrenheit = true; // Temperature scale: true = Fahrenheit, false = Celsius
+bool buttonState = LOW;    // Current state of the button
+bool lastButtonState = LOW;// Previous state of the button
+unsigned long lastDebounceTime = 0; // Last time the button input pin was toggled
+unsigned long debounceDelay = 50;   // Debounce time; increase if button bounces
 
 void setup() {
   // Initialize Serial communication for debugging
@@ -61,6 +68,7 @@ void setup() {
   pinMode(MQ2_PIN, INPUT);
   pinMode(BUZZER_PIN, OUTPUT);
   pinMode(LED_PIN, OUTPUT);
+  pinMode(MODE_BUTTON_PIN, INPUT_PULLUP); // Use INPUT_PULLUP for button to avoid external resistor
 
   // Initial warming up for MQ-2 sensor (crucial for accurate readings)
   Serial.println("Warming up MQ-2 sensor for 20 seconds...");
@@ -77,6 +85,25 @@ void setup() {
 }
 
 void loop() {
+  // --- Handle Button Press ---
+  int reading = digitalRead(MODE_BUTTON_PIN);
+
+  // If the button state has changed (and debounced)
+  if (reading != lastButtonState) {
+    lastDebounceTime = millis();
+  }
+
+  if ((millis() - lastDebounceTime) > debounceDelay) {
+    // If the button state is LOW (pressed, due to INPUT_PULLUP)
+    if (reading != buttonState) {
+      buttonState = reading;
+      if (buttonState == LOW) { // Button is pressed
+        useFahrenheit = !useFahrenheit; // Toggle temperature scale
+      }
+    }
+  }
+  lastButtonState = reading; // Save the reading for the next loop iteration
+
   // Clear the display for new readings
   display.clearDisplay();
 
