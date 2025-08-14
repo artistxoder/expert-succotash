@@ -2,6 +2,9 @@
 
 A combined gas detection and climate monitoring project using Arduino UNO, MQ-2 gas sensor, and DHT11 temperature/humidity sensor. Includes buzzer and LED alarm.
 
+## Acknowledgements
+- **Gemini**, **ChatGPT**, and **Claude** were used to generate, refine, and improve the OpenSCAD code, making it more modular and parametric.
+- The conceptual wiring diagram was also created with the assistance of these AI models.
 ---
 
 ## 📦 Features
