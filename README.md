@@ -1,6 +1,6 @@
-# Arduino MQ-2 Gas + DHT11 Temp/Humidity Monitor with 3D Printed Case
+# Arduino MQ-2 Gas + DHT11 Temp/Humidity Monitor with 3D Printed Case and OLED Display
 
-A combined gas detection and climate monitoring project using Arduino UNO, MQ-2 gas sensor, and DHT11 temperature/humidity sensor. This project includes a **100% screw-free 3D printable case** designed for easy assembly and optimal component integration, complete with buzzer and LED alarms.
+A combined gas detection and climate monitoring project using Arduino UNO, MQ-2 gas sensor, and DHT11 temperature/humidity sensor. This project includes a **100% screw-free 3D printable case** designed for easy assembly and optimal component integration, complete with buzzer and LED alarms, and **an integrated OLED display** for real-time data.
 
 ## Acknowledgements
 
@@ -13,7 +13,8 @@ Gemini, ChatGPT, and Claude were used to generate, refine, and improve the OpenS
 * Buzzer + LED alerts when gas exceeds a set threshold.
 * Option to display temperature in Celsius or Fahrenheit.
 * Smoothed gas readings for better accuracy.
-* **Custom 3D Printed Enclosure:** A two-part case (main body + lid) with integrated mounts.
+* **Real-time data displayed on a 0.96" OLED screen.**
+* **Custom 3D Printed Enclosure:** A two-part case (main body + lid) with integrated mounts for all components, including the OLED.
 * **100% Screw-Free Design:** All components are held in place with snap-fits and friction mounts.
 
 ## 🛠 Hardware Required
@@ -21,6 +22,7 @@ Gemini, ChatGPT, and Claude were used to generate, refine, and improve the OpenS
 * Arduino UNO (or compatible)
 * MQ-2 Gas Sensor
 * DHT11 Temperature/Humidity Sensor
+* **0.96" OLED Display (I2C compatible, 128x64 pixels)**
 * Active Buzzer
 * LED + Resistor (220Ω)
 * Jumper Wires
@@ -28,20 +30,24 @@ Gemini, ChatGPT, and Claude were used to generate, refine, and improve the OpenS
 
 ## 📐 Circuit Diagram
 
-| Arduino Pin | Component               |
-| :---------- | :---------------------- |
-| A0          | MQ-2 Analog Output      |
-| 3           | DHT11 Data Pin          |
-| 8           | Buzzer (+)              |
-| 9           | LED (+ via resistor)    |
-| GND         | All Components GND      |
-| 5V          | MQ-2 + DHT11 VCC        |
+| Arduino Pin | Component                           |
+| :---------- | :---------------------------------- |
+| A0          | MQ-2 Analog Output                  |
+| 3           | DHT11 Data Pin                      |
+| 8           | Buzzer (+)                          |
+| 9           | LED (+ via resistor)                |
+| SDA (A4)    | OLED Data (SDA)                     |
+| SCL (A5)    | OLED Clock (SCL)                    |
+| GND         | All Components GND (including OLED) |
+| 5V          | MQ-2 + DHT11 + OLED VCC             |
+
+**Note:** The OLED display typically uses I2C communication, connecting to Arduino's Analog Pin 4 (SDA) and Analog Pin 5 (SCL).
 
 ## 📄 How It Works
 
 1.  `MQ-2` detects gas concentration.
 2.  `DHT11` reads temperature and humidity.
-3.  Values are printed to Serial Monitor.
+3.  Values are printed to the Serial Monitor **and displayed on the OLED screen**.
 4.  If gas exceeds the set threshold, the buzzer sounds and the LED turns on.
 
 ## 🔧 Setup Instructions
@@ -49,13 +55,17 @@ Gemini, ChatGPT, and Claude were used to generate, refine, and improve the OpenS
 1.  **Install the `DHT sensor library` in Arduino IDE:**
     * Go to `Sketch > Include Library > Manage Libraries...`
     * Search for `DHT sensor library by Adafruit` and install.
-2.  Connect components according to the wiring diagram.
-3.  Upload the code from `mq2_dht11.ino` to your Arduino.
-4.  Open Serial Monitor (9600 baud) to view live data.
+2.  **Install OLED display libraries in Arduino IDE:**
+    * Go to `Sketch > Include Library > Manage Libraries...`
+    * Search for `Adafruit SSD1306` and install it.
+    * Search for `Adafruit GFX Library` and install it (required by SSD1306).
+3.  Connect components according to the wiring diagram.
+4.  Upload the code from `mq2_dht11.ino` to your Arduino.
+5.  Open Serial Monitor (9600 baud) to view live data.
 
 ## 🖨️ 3D Printable Case
 
-This project includes a custom 3D printed case designed to house all the components neatly. The design is optimized for smaller FDM 3D printers, specifically the **EasyThreed K7 Mini (100x100x100mm build volume)**.
+This project includes a custom 3D printed case designed to house all the components neatly. The design is optimized for smaller FDM 3D printers, specifically the **EasyThreed K7 Mini (100x100x100mm build volume)**, and includes a precise cutout for the OLED display.
 
 ### **Available Files:**
 
@@ -77,7 +87,7 @@ This project includes a custom 3D printed case designed to house all the compone
 1.  Print both `case_main.stl` and `case_lid.stl` separately.
 2.  The Arduino mounts via snap-fit posts inside the main case.
 3.  The mini breadboard slides into a friction-fit mount.
-4.  Sensors (MQ-2, DHT11) and outputs (Buzzer, LED) have dedicated slots and mounts.
+4.  Sensors (MQ-2, DHT11), outputs (Buzzer, LED), **and the OLED display** have dedicated slots and mounts.
 5.  Route wires through the internal management channels.
 6.  Once all components are installed and wired, the lid snaps securely onto the main case.
 
