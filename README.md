@@ -1,84 +1,70 @@
-# expert-succotash
-# 🔥 Arduino UNO MQ-2 Gas Sensor + OLED Display with Custom 3D Printed Case
+# Arduino MQ-2 Gas + DHT11 Temp/Humidity Sensor
 
-An **Arduino-based gas detection system** using the MQ-2 sensor and an SSD1306 OLED display, all housed in a custom 3D-printed case.  
-Detects **LPG, methane, smoke, and other gases** and displays real-time readings on the screen.
-
-![Wiring Diagram](wiring-diagram.png)  
-![3D Printed Case](case-photo.png)  
+A combined gas detection and climate monitoring project using Arduino UNO, MQ-2 gas sensor, and DHT11 temperature/humidity sensor. Includes buzzer and LED alarm.
 
 ---
 
-## ✨ Features
-- **Real-time gas detection** with MQ-2 sensor
-- **OLED display** (SSD1306) for live readings
-- Compact, **snap-fit 3D printed case** (optimized for K7 Mini printer & red PLA)
-- Fully customizable — change dimensions, code, or case color
-- Open source hardware & software
+## 📦 Features
+- Detects gas/smoke using **MQ-2 sensor**.
+- Measures temperature and humidity with **DHT11**.
+- Buzzer + LED alerts when gas exceeds threshold.
+- Option to display temperature in **Celsius or Fahrenheit**.
+- Smoothed gas readings for better accuracy.
 
 ---
 
-## 🛠 Components Used
+## 🛠 Hardware Required
 - Arduino UNO (or compatible)
-- MQ-2 gas sensor
-- 0.96" SSD1306 OLED display (I²C)
-- Breadboard & jumper wires
-- 3D printed case (OpenSCAD design)
+- MQ-2 Gas Sensor
+- DHT11 Temperature/Humidity Sensor
+- Active Buzzer
+- LED + Resistor (220Ω)
+- Jumper Wires
+- Breadboard or PCB
 
 ---
 
-## 🔌 Wiring Guide
+## 📐 Circuit Diagram
+![Wiring Diagram](wiring.png)
 
-| MQ-2 Pin | Arduino Pin |
-|----------|------------|
-| VCC      | 5V         |
-| GND      | GND        |
-| A0       | A0         |
-| D0       | D2         |
-
-| OLED Pin | Arduino Pin |
-|----------|------------|
-| VCC      | 5V         |
-| GND      | GND        |
-| SDA      | A4         |
-| SCL      | A5         |
+| Arduino Pin | Component                 |
+|-------------|---------------------------|
+| A0          | MQ-2 Analog Output        |
+| 3           | DHT11 Data Pin             |
+| 8           | Buzzer (+)                 |
+| 9           | LED (+ via resistor)       |
+| GND         | All Components GND         |
+| 5V          | MQ-2 + DHT11 VCC           |
 
 ---
 
-## 📜 Arduino Code
-```cpp
-#include <Wire.h>
-#include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h>
+## 📄 How It Works
+1. MQ-2 detects gas concentration.
+2. DHT11 reads temperature and humidity.
+3. Values are printed to Serial Monitor.
+4. If gas exceeds the set threshold, buzzer and LED turn on.
 
-#define SCREEN_WIDTH 128
-#define SCREEN_HEIGHT 64
-Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
+---
 
-#define MQ2_A0 A0
+## 🔧 Setup Instructions
+1. Install the **DHT sensor library** in Arduino IDE:
+   - Go to `Sketch > Include Library > Manage Libraries...`
+   - Search for **DHT sensor library by Adafruit** and install.
+2. Connect components according to the wiring diagram.
+3. Upload the code from `mq2_dht11.ino` to your Arduino.
+4. Open Serial Monitor (9600 baud) to view live data.
 
-void setup() {
-  Serial.begin(9600);
+---
 
-  if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
-    Serial.println(F("SSD1306 allocation failed"));
-    for (;;);
-  }
-  display.clearDisplay();
-  display.setTextSize(1);
-  display.setTextColor(WHITE);
-}
+## ⚖ License
+This project is licensed under the MIT License — you are free to use, modify, and distribute.
 
-void loop() {
-  int sensorValue = analogRead(MQ2_A0);
+---
 
-  display.clearDisplay();
-  display.setCursor(0, 0);
-  display.print("Gas Level:");
-  display.setCursor(0, 20);
-  display.setTextSize(2);
-  display.print(sensorValue);
-  display.display();
+## 🤝 Contributing
+Pull requests are welcome. For major changes, please open an issue first to discuss ideas.
 
-  delay(500);
-}
+---
+
+## 📢 Author
+Created by **[Your Name]** – inspired by DIY electronics and IoT safety devices.
